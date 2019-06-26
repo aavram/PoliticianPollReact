@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 class Logout extends Component {
 
   logout() {
-    this.props.history.push('/');
+    //this.props.history.push('/');
     this.props.keycloak.logout();
   }
 
