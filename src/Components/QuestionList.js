@@ -7,6 +7,8 @@ import Question from "./Question";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Navbar from "./Navbar";
+import Keycloak from "keycloak-js";
+import { withRouter } from 'react-router-dom'
 
 const styles = theme => ({
   root: {
@@ -30,7 +32,9 @@ class QuestionList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: []
+      list: [],
+      keycloak: null,
+      authenticated: false,
     };
   }
 
@@ -78,4 +82,4 @@ class QuestionList extends Component {
     );
   }
 }
-export default withStyles(styles)(QuestionList);
+export default withRouter(withStyles(styles)(QuestionList));

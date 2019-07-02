@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
 
 class Logout extends Component {
 
   logout() {
-    //this.props.history.push('/');
+    this.props.history.push('/');
     this.props.keycloak.logout();
+    this.props.dispatch({type: "LOGOUT", data: null})
   }
 
   render() {
@@ -16,4 +18,11 @@ class Logout extends Component {
     );
   }
 }
-export default withRouter(Logout);
+
+const mapStateToProps = state => {
+  return {
+    data: state
+  };
+};
+
+export default connect(mapStateToProps) (withRouter(Logout));

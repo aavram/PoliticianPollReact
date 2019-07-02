@@ -18,7 +18,10 @@ import Logout from "@material-ui/icons/ExitToApp";
 import Login from "@material-ui/icons/Person";
 import { withStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const styles = theme => ({
   root: {
@@ -44,6 +47,10 @@ class Navbar extends Component {
     };
   }
 
+  static propTypes = {
+    keycloak: PropTypes.objectOf(PropTypes.any),
+  };
+
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -53,11 +60,21 @@ class Navbar extends Component {
   };
 
   onClickLogin = () => {
-    this.props.history.push("login");
+    this.props.history.push("questions");
   };
 
   onClickLogout = () => {
     this.props.history.push("");
+    axios({
+      method: 'post',
+      url: 'http://localhost:8080/auth/realms/PoliticianPoll/protocol/openid-connect/logout',
+      headers: {'Authorization' : `Bearer ${this.props.data.Login.token}`}, 
+      data: {
+        client_id: 'politicianpollreact',
+        refresh_token: this.props.data.Login.keycloak.refreshToken,
+      }
+    });
+    this.props.dispatch({type: "LOGOUT", data: null})
     this.props.keycloak.logout();
   };
 
@@ -108,7 +125,7 @@ class Navbar extends Component {
                 ))}
               </List>
               <Divider />
-              {!this.props.loggedIn && (
+              {!this.props.data.Login.authenticated && (
                 <ListItem onClick={this.onClickLogin}>
                   <ListItemIcon>
                     <Login />
@@ -116,7 +133,7 @@ class Navbar extends Component {
                   <ListItemText primary={"Login"} />
                 </ListItem>
               )}
-              {this.props.loggedIn && (
+              {this.props.data.Login.authenticated && (
                 <ListItem onClick={this.onClickLogout}>
                   <ListItemIcon>
                     <Logout />
@@ -136,4 +153,11 @@ class Navbar extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(Navbar));
+const mapStateToProps = state => {
+  return {
+    keycloak: state.Login.keycloak,
+    data: state,
+  };
+};
+
+export default connect(mapStateToProps) (withRouter(withStyles(styles)(Navbar)));

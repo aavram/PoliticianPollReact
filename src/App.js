@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import QuestionList from "./Components/QuestionList";
 import QuestionForm from "./Components/QuestionForm";
 import Login from "./Components/Login";
-import Main from "./Main";
 import "./App.css";
 import Navbar from './Components/Navbar';
 
@@ -13,7 +12,7 @@ class App extends Component {
       <BrowserRouter>
         <div className="container">
           <Switch>
-            <Route exact path="/login" component={Login}/>
+            <Route exact path="/questions" component={Login}/>
             <Route component={DefaultContainer}/>
           </Switch>
         </div>
